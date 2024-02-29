@@ -6,7 +6,7 @@
 
 #### Ex : C:\Users\iwan1>cd D:\Folder Penghubung Github\Machine-Learning\Machine-Learning-exercise> cd Image_Classification_RPS_Use_TFJS
 
-### 2 run the python server command
+### 2 run the python server command on CMD or Terminal
 
 #### Ex : python -m http.server 8000
 
