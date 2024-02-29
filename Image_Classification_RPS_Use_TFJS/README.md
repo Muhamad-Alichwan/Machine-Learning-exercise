@@ -12,7 +12,7 @@
 
 ### 3 open the Browser and run
 
-#### Ex : type in localhost:8000 atau http://localhost:8000 on browser
+#### Ex : type in localhost:8000 or http://localhost:8000 on browser
 
 ### 4 click the rock / paper / scissor button to take a picture. if you press the rock button then point your hand at the camera by showing the Rock image for training.
 
