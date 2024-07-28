@@ -21,7 +21,7 @@ name="Xray",
 version="0.0.1",
 author="Alichwan",
 author_email="alichwan.muhamad@gmail.com",
-install_requires=get_requirements(r"D:\Folder Penghubung Github\Machine-Learning\Machine-Learning-exercise\Deep_Learning_Project\requirements_dev.txt"),
+install_requires=get_requirements(r"D:\\Folder Penghubung Github\\Machine-Learning\\Machine-Learning-exercise\\Deep_Learning_Project\\requirements_dev.txt"),
 package=find_packages()
 
 )

@@ -1,73 +1,54 @@
-from datetime import datetime
-from typing import List
+import sys
 
-import torch
-
-TIMESTAMP: datetime = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
-
-
-# Data Ingestion Constants
-ARTIFACT_DIR: str = "artifacts"
-
-BUCKET_NAME: str = "lungxray24"
-
-S3_DATA_FOLDER: str = "data"
+from Xray.cloud_storage.s3_operation import S3Operation
+from Xray.constant.training_pipeline import *
+from Xray.entity.artifact_entity import DataIngestionArtifact
+from Xray.entity.config_entity import DataIngestionConfig
+from Xray.exception import XRayException
+from Xray.logger import logging
 
 
-# data trasnforamtion
-CLASS_LABEL_1: str = "NORMAL"
+class DataIngestion:
+    def __init__(self, data_ingestion_config: DataIngestionConfig):
+        self.data_ingestion_config = data_ingestion_config
 
-CLASS_LABEL_2: str = "PNEUMONIA"
+        self.s3 = S3Operation()
 
-BRIGHTNESS: int = 0.10
+    def get_data_from_s3(self) -> None:
+        try:
+            logging.info("Entered the get_data_from_s3 method of Data ingestion class")
 
-CONTRAST: int = 0.1
+            self.s3.sync_folder_from_s3(
+                folder=self.data_ingestion_config.data_path,
+                bucket_name=self.data_ingestion_config.bucket_name,
+                bucket_folder_name=self.data_ingestion_config.s3_data_folder,
+            )
 
-SATURATION: int = 0.10
+            logging.info("Exited the get_data_from_s3 method of Data ingestion class")
 
-HUE: int = 0.1
+        except Exception as e:
+            raise XRayException(e, sys)
+        
+        
 
-RESIZE: int = 224
+    def initiate_data_ingestion(self) -> DataIngestionArtifact:
+        logging.info(
+            "Entered the initiate_data_ingestion method of Data ingestion class"
+        )
 
-CENTERCROP: int = 224
+        try:
+            self.get_data_from_s3()
 
-RANDOMROTATION: int = 10
+            data_ingestion_artifact: DataIngestionArtifact = DataIngestionArtifact(
+                train_file_path=self.data_ingestion_config.train_data_path,
+                test_file_path=self.data_ingestion_config.test_data_path,
+            )
 
-NORMALIZE_LIST_1: List[int] = [0.485, 0.456, 0.406]
+            logging.info(
+                "Exited the initiate_data_ingestion method of Data ingestion class"
+            )
 
-NORMALIZE_LIST_2: List[int] = [0.229, 0.224, 0.225]
+            return data_ingestion_artifact
 
-TRAIN_TRANSFORMS_KEY: str = "xray_train_transforms"
-
-TRAIN_TRANSFORMS_FILE: str = "train_transforms.pkl"
-
-TEST_TRANSFORMS_FILE: str = "test_transforms.pkl"
-
-BATCH_SIZE: int = 2
-
-SHUFFLE: bool = False
-
-PIN_MEMORY: bool = True
-
-
-#model trainer constants
-
-TRAINED_MODEL_DIR: str = "trained_model"
-
-TRAINED_MODEL_NAME: str = "model.pt"
-
-DEVICE: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-STEP_SIZE: int = 6
-
-GAMMA: int = 0.5
-
-EPOCH: int = 1
-
-BENTOML_MODEL_NAME: str = "xray_model"
-
-BENTOML_SERVICE_NAME: str = "xray_service"
-
-BENTOML_ECR_URI: str = "xray_bento_image"
-
-PREDICTION_LABEL: dict = {"0": CLASS_LABEL_1, 1: CLASS_LABEL_2}
+        except Exception as e:
+            raise XRayException(e, sys)
